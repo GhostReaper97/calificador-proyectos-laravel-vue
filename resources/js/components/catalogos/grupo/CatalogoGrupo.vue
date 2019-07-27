@@ -24,7 +24,7 @@
                             <tr :key="index" v-for="(grupo,index) in Grupos">
                                 <td> {{ grupo.nombre }} </td>
                                 <td>
-                                    <button class="btn btn-outline-dark btn-rounded"><i class="fas fa-pen"></i></button>
+                                    <button @click="Buscar(grupo.id)" class="btn btn-outline-dark btn-rounded"><i class="fas fa-pen"></i></button>
                                     <button @click="Eliminar(grupo.id)" class="btn btn-outline-dark btn-rounded"><i class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
@@ -49,7 +49,8 @@
             </template>
 
             <template slot="botones">
-                <button @click="Crear()" class="btn btn-primary">Crear <i class="fas fa-save"></i></button>
+                <button v-if="EsNuevo" @click="Crear()" class="btn btn-primary">Crear <i class="fas fa-save"></i></button>
+                <button v-else @click="GuardarCambios()" class="btn btn-primary">Guardar Cambios <i class="fas fa-save"></i></button>
             </template>
 
         </modal-template>
@@ -66,6 +67,7 @@ export default{
 
             Grupos : [],
 
+            id : "",
             Nombre : "",
 
             EsNuevo : true,
@@ -81,6 +83,16 @@ export default{
 
         AbrirModal(){
 
+            this.Titulo = "Nuevo";
+
+            if(!this.EsNuevo){
+
+                this.Nombre = "";
+                this.EsNuevo = true;
+                this.Errores = [];
+
+            }
+
             $("#modal_grupo").modal();
 
         },
@@ -88,6 +100,7 @@ export default{
         LimpiarModelo(){
 
             this.Nombre = "";
+            this.id = "";
 
         },
 
@@ -98,6 +111,25 @@ export default{
             ).then( (Respuesta) => {
 
                 this.Grupos = Respuesta.data;
+
+            });
+
+        },
+
+        Buscar(id){
+
+            axios.get(
+                'api/grupo/' + id
+            ).then( (Respuesta) => {
+
+                this.EsNuevo = false;
+
+                this.Nombre = Respuesta.data.nombre;
+                this.id = Respuesta.data.id;
+
+                this.Titulo = "Grupo " + this.Nombre;
+
+                $("#modal_grupo").modal();
 
             });
 
@@ -119,6 +151,37 @@ export default{
                 $("#modal_grupo").modal('hide');
 
                 this.Listar();
+
+            }).catch( (error) => {
+               
+                if(error.response.status == 500)
+                    this.Errores = error.response.data.errors;
+
+            });
+
+        },
+
+        GuardarCambios(){
+
+            let json = {
+                nombre : this.Nombre,
+                id : this.id
+            };
+
+            axios.post(
+                'api/grupo/update',
+                {"json" : JSON.stringify(json)}
+            ).then( (Respuesta) => {
+
+                this.Errores = [];
+                this.EsNuevo = true;
+
+                toastr.success('Grupo actualizado','Hecho');
+
+                $("#modal_grupo").modal('hide');
+
+                this.Listar();
+                this.LimpiarModelo();
 
             }).catch( (error) => {
                
@@ -156,6 +219,8 @@ export default{
         this.Listar();
 
     },
+
+
 
 }
 

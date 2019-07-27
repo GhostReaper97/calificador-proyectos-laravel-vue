@@ -26,4 +26,17 @@ class Docente extends Model
 
     }
 
+    /**
+     * 
+     * Realcion : muchos a muchos
+     * Docente a Materia
+     * 
+     */
+    public function Materia(){
+
+        return $this -> belongsToMany(Materia::class,'id_docente');
+
+    }
+
+
 }

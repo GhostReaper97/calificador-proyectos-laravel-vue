@@ -3,35 +3,66 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Grupo;
+use App\Materia;
+use App\Docente;
 
-class GrupoController extends Controller
+class MaterialController extends Controller
 {
-
-    //funciones de vista
     
     public function index(){
 
-        return view('catalogos/grupo/grupo');
+        return view('catalogos/materia/materia');
 
     }
-
-    //funciones de api
 
     public function Listar(){
 
-        $ObjGrupos = Grupo::where('reg_status','=', 1)
+        $Materias = Materia::where('reg_status','=',1)
             -> get();
 
-        return $ObjGrupos;
+        return $Materias;
 
     }
 
+    public function ConsultarDocenteMaterias($id){
+
+        $Materias = Docente::with('materia')
+            -> find($id);
+
+        return $Materias;
+
+    }
+
+    public function AsignarMateriaDocente(){
+
+        $json = request() -> input('json', null);
+
+        $ParametrosArray = json_decode($json, true);
+
+        $Docente = Docente::find($ParametrosArray['id_docente']);
+        $Materia = Materia::find($ParametrosArray['id_materia']);
+
+        $Docente -> Materia -> associate($Materia);
+
+        $Docente -> save();
+
+        $Respuesta = array(
+            'status'            =>          'success',
+            'code'              =>          '200',
+            'message'           =>          'Materia asignada',
+            'docente'           =>          $Docente
+        );
+
+        return response() -> json($Respuesta,$Respuesta['code']);
+
+    }
+    
+
     public function Buscar($id){
 
-        $ObjGrupos = Grupo::find($id);
-
-        return $ObjGrupos;
+        $ObjMateria = Materia::find($id);
+        
+        return $ObjMateria;
 
     }
 
@@ -56,23 +87,23 @@ class GrupoController extends Controller
 
         } else {
 
-            $ObjGrupo = new Grupo($ParametrosArray);
+            $ObjMateria = new Materia($ParametrosArray);
 
-            $ObjGrupo -> reg_status = 1;
+            $ObjMateria -> reg_status = 1;
 
-            $ObjGrupo -> save();
+            $ObjMateria -> save();
 
             $Respuesta = array(
                 'status'            =>          'success',
                 'code'              =>          '200',
                 'message'           =>          'Registro Guardado',
-                'grupo'             =>          $ObjGrupo
+                'materia'             =>          $ObjMateria
             );
 
         }
 
         return response() -> json($Respuesta,$Respuesta['code']);
-
+        
     }
 
     public function Actualizar(){
@@ -81,7 +112,7 @@ class GrupoController extends Controller
 
         $ParametrosArray = json_decode($Json, true);
 
-        $ObjGrupo = $this -> Buscar($ParametrosArray['id']);
+        $ObjMateria = $this -> Buscar($ParametrosArray['id']);
 
         $Validacion = validator() -> make($ParametrosArray,[
             'nombre'            =>          'required|string'
@@ -98,19 +129,19 @@ class GrupoController extends Controller
 
         } else {
 
-            $ObjGrupo -> nombre = $ParametrosArray['nombre'];
-
-            $ObjGrupo -> save();
+            $ObjMateria -> nombre = $ParametrosArray['nombre'];
+            
+            $ObjMateria -> save();
 
             $Respuesta = array(
                 'status'            =>          'success',
                 'code'              =>          '200',
                 'message'           =>          'Registro Actualizado',
-                'grupo'             =>          $ObjGrupo
+                'materia'             =>          $ObjMateria
             );
 
         }
-        
+
         return response() -> json($Respuesta,$Respuesta['code']);
 
     }
@@ -121,22 +152,21 @@ class GrupoController extends Controller
 
         $ParametrosArray = json_decode($Json, true);
 
-        $ObjGrupo = $this -> Buscar($ParametrosArray['id']);
+        $ObjMateria = $this -> Buscar($ParametrosArray['id']);
 
-        $ObjGrupo -> reg_status = 0;
+        $ObjMateria -> reg_status = 0;
 
-        $ObjGrupo -> save();
+        $ObjMateria -> save();
 
         $Respuesta = array(
             'status'            =>          'success',
             'code'              =>          '200',
             'message'           =>          'Registro eliminado',
-            'grupo'             =>          $ObjGrupo
+            'materia'             =>          $ObjMateria
         );
 
         return response() -> json($Respuesta,$Respuesta['code']);
 
     }
-
 
 }

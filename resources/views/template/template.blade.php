@@ -25,7 +25,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">Start Bootstrap</a>
+    <a class="navbar-brand mr-1" href="index.html">CDP</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
       <i class="fas fa-bars"></i>
@@ -101,7 +101,10 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="pagesDropdown">
           <a class="dropdown-item" href="{{ route('CatalogoGrupo') }}"> <i class="fas fa-user-friends"></i>  Grupos</a>
-          
+          <a class="dropdown-item" href="{{ route('CatalogoCuatrimestre') }}"> <i class="fas fa-user-friends"></i>  Cuatrimestres</a>
+          <a class="dropdown-item" href="{{ route('CatalogoMateria') }}"> <i class="fas fa-user-friends"></i>  Materias</a>
+          <a class="dropdown-item" href="{{ route('CatalogoDocente') }}"> <i class="fas fa-user-friends"></i>  Docentes</a>
+
         </div>
       </li>
 
