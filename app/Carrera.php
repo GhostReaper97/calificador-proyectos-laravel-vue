@@ -14,4 +14,10 @@ class Carrera extends Model
         'reg_status'
     ];
 
+    public function Alumno(){
+
+        return $this -> hasMany(Alumno::class,'id_carrera');
+
+    }
+
 }

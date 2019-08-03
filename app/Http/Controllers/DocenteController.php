@@ -26,6 +26,7 @@ class DocenteController extends Controller
     public function Listar(){
 
         $Docente = Persona::with('docente')
+            -> has('docente')
             -> where('reg_status','=',1)
             -> get();
 

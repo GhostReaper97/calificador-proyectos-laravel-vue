@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Materia;
 use App\Docente;
+use Illuminate\Database\Eloquent\Builder;
 
 class MaterialController extends Controller
 {
@@ -26,9 +27,25 @@ class MaterialController extends Controller
 
     public function ConsultarDocenteMaterias($id){
 
-        $Materias = Docente::with('materia')
-            -> find($id);
+        $Materias = Docente::find($id)
+            -> Materia()
+            -> get();
 
+        return $Materias;
+
+    }
+
+    public function ConsultarDocenteSinMaterias($id_docente){
+
+        $Materias = Materia::whereDoesntHave('docente', function(Builder $query) use ($id_docente) {
+
+            $query -> where('id','=', $id_docente);
+
+        })
+            -> where('reg_status','=',1)
+            -> with('docente')
+            -> get();
+        
         return $Materias;
 
     }
@@ -42,9 +59,7 @@ class MaterialController extends Controller
         $Docente = Docente::find($ParametrosArray['id_docente']);
         $Materia = Materia::find($ParametrosArray['id_materia']);
 
-        $Docente -> Materia -> associate($Materia);
-
-        $Docente -> save();
+        $Docente -> Materia() -> attach($Materia,['id_materia' => $Materia -> id]);
 
         $Respuesta = array(
             'status'            =>          'success',

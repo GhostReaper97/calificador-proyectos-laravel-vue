@@ -108,6 +108,34 @@
         </div>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link"  href="{{ route('CatalogoDocente') }}">
+        <i class="fas fa-user-friends"></i>
+          <span>Docentes</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"  href="{{ route('CatalogoDocente') }}">
+        <i class="fas fa-user-friends"></i>
+          <span>Alumnos</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"  href="{{ route('CatalogoDocente') }}">
+        <i class="fas fa-user-friends"></i>
+          <span>Proyectos</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"  href="{{ route('CatalogoDocente') }}">
+        <i class="fas fa-user-friends"></i>
+          <span>Evaluaciones</span>
+        </a>
+      </li>
+
     </ul>
 
     <div id="content-wrapper">

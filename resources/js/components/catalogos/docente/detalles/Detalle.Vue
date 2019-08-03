@@ -5,7 +5,7 @@
         <div style="padding-left:10px" class="row justify-content-start">
             <div class="col-md-4">
                 <h2>Detalles del docente</h2>
-                <a href="../">Docentes</a> / Detalle
+                <a href="../">Docentes</a> / Detalle / {{ docente }}
             </div>
         </div>
 
@@ -22,10 +22,13 @@
             <li @click="seccion = 3" class="nav-item">
                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Proyectos Asignados</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Datos Personales</a>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <deta-usuario :id="id" v-if="seccion == 1" ></deta-usuario>
-            <materias-docente v-if="seccion == 2"></materias-docente>
+            <materias-docente :id="id" v-if="seccion == 2"></materias-docente>
         </div>
     </div>
 </template>
@@ -40,10 +43,36 @@ export default {
     data(){
         return {
 
-            seccion : 1
+            seccion : 1,
+
+            docente : ""
 
         }
     },
+    
+    methods: {
+
+        ConsultaDocente(){
+
+            axios.get(
+                '../../api/docente/' + this.id
+            ).then( (Respuesta) =>{
+
+                this.docente = Respuesta.data.nombre + " " + Respuesta.data.apellido;
+
+            });
+
+        }
+        
+    },
+
+    mounted() {
+        
+        this.ConsultaDocente();
+
+    },
+
+    
 
 }
 </script>

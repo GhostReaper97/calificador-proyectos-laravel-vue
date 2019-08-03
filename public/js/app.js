@@ -51842,6 +51842,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -51850,9 +51853,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
 
-            seccion: 1
+            seccion: 1,
+
+            docente: ""
 
         };
+    },
+
+
+    methods: {
+        ConsultaDocente: function ConsultaDocente() {
+            var _this = this;
+
+            axios.get('../../api/docente/' + this.id).then(function (Respuesta) {
+
+                _this.docente = Respuesta.data.nombre + " " + Respuesta.data.apellido;
+            });
+        }
+    },
+
+    mounted: function mounted() {
+
+        this.ConsultaDocente();
     }
 });
 
@@ -51865,7 +51887,21 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c(
+      "div",
+      {
+        staticClass: "row justify-content-start",
+        staticStyle: { "padding-left": "10px" }
+      },
+      [
+        _c("div", { staticClass: "col-md-4" }, [
+          _c("h2", [_vm._v("Detalles del docente")]),
+          _vm._v(" "),
+          _c("a", { attrs: { href: "../" } }, [_vm._v("Docentes")]),
+          _vm._v(" / Detalle / " + _vm._s(_vm.docente) + "\n        ")
+        ])
+      ]
+    ),
     _vm._v(" "),
     _c("br"),
     _vm._v(" "),
@@ -51958,7 +51994,9 @@ var render = function() {
               [_vm._v("Proyectos Asignados")]
             )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _vm._m(0)
       ]
     ),
     _vm._v(" "),
@@ -51970,7 +52008,9 @@ var render = function() {
           ? _c("deta-usuario", { attrs: { id: _vm.id } })
           : _vm._e(),
         _vm._v(" "),
-        _vm.seccion == 2 ? _c("materias-docente") : _vm._e()
+        _vm.seccion == 2
+          ? _c("materias-docente", { attrs: { id: _vm.id } })
+          : _vm._e()
       ],
       1
     )
@@ -51981,21 +52021,23 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "row justify-content-start",
-        staticStyle: { "padding-left": "10px" }
-      },
-      [
-        _c("div", { staticClass: "col-md-4" }, [
-          _c("h2", [_vm._v("Detalles del docente")]),
-          _vm._v(" "),
-          _c("a", { attrs: { href: "../" } }, [_vm._v("Docentes")]),
-          _vm._v(" / Detalle\n        ")
-        ])
-      ]
-    )
+    return _c("li", { staticClass: "nav-item" }, [
+      _c(
+        "a",
+        {
+          staticClass: "nav-link",
+          attrs: {
+            id: "contact-tab",
+            "data-toggle": "tab",
+            href: "#contact",
+            role: "tab",
+            "aria-controls": "contact",
+            "aria-selected": "false"
+          }
+        },
+        [_vm._v("Datos Personales")]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -52543,10 +52585,126 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+
+    props: ['id'],
+
     data: function data() {
-        return {};
+        return {
+
+            listaMateriasDocente: [],
+
+            listaMaterias: [],
+
+            id_materia: ""
+
+        };
+    },
+
+
+    methods: {
+        AbrirModal: function AbrirModal() {
+
+            $("#modal_materia").modal();
+        },
+        ListarMateriasDocente: function ListarMateriasDocente() {
+            var _this = this;
+
+            axios.get('../../api/docente/materias/con/' + this.id).then(function (Respuesta) {
+
+                _this.listaMateriasDocente = Respuesta.data;
+
+                console.log();
+            });
+        },
+        ListarMaterias: function ListarMaterias() {
+            var _this2 = this;
+
+            axios.get('../../api/docente/materias/sin/' + this.id).then(function (Respuesta) {
+
+                _this2.listaMaterias = Respuesta.data;
+            });
+        },
+        AgregarMateria: function AgregarMateria(id_materia) {
+            var _this3 = this;
+
+            var json = {
+                id_materia: id_materia,
+                id_docente: this.id
+            };
+
+            axios.post('../../api/docente/materia', { "json": JSON.stringify(json) }).then(function (Respuesta) {
+
+                toastr.success('La materia ha sido agregada al docente', 'Listo!');
+
+                _this3.ListarMateriasDocente();
+                _this3.ListarMaterias();
+            });
+        }
+    },
+
+    created: function created() {
+
+        this.ListarMaterias();
+        this.ListarMateriasDocente();
     }
 });
 
@@ -52558,27 +52716,170 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "card" },
+      [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "row" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-dark btn-block",
+                  on: {
+                    click: function($event) {
+                      return _vm.AbrirModal()
+                    }
+                  }
+                },
+                [_vm._v("Agregar Materia")]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("div", { staticClass: "table-responsive" }, [
+                _c("table", { staticClass: "table table-hover" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.listaMateriasDocente, function(materia, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", [_vm._v(" " + _vm._s(materia.nombre) + " ")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(" " + _vm._s(materia.created_at) + " ")
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(2, true)
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "modal-template",
+          {
+            attrs: {
+              id: "modal_materia",
+              size: "modal-md",
+              titulo: "Seleccionar Materia"
+            }
+          },
+          [
+            _c("template", { slot: "contenido" }, [
+              _c("h4", [_vm._v("Listado de materias")]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("div", { staticClass: "table-responsive-xl" }, [
+                _c("table", { staticClass: "table table-sm table-hover" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th", [_vm._v("Materia")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Accion")])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.listaMaterias, function(materia, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", [_vm._v(" " + _vm._s(materia.nombre) + " ")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-dark",
+                              attrs: {
+                                "data-toggle": "tooltip",
+                                "data-placement": "top",
+                                title: "Agregar"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.AgregarMateria(materia.id)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v("Agregar "),
+                              _c("i", { staticClass: "fas fa-plus-square" })
+                            ]
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("template", { slot: "botones" })
+          ],
+          2
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-12" }, [
-              _c("h5", [_vm._v("Materias del docente")])
-            ])
-          ])
-        ]),
+    return _c("div", { staticClass: "col-md-10" }, [
+      _c("h5", [_vm._v("Materias del docente")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Materia")]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "row" }, [_c("div")])
-        ])
+        _c("th", [_vm._v("Fecha de asignacion")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Acciones")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-outline-dark btn-rounded",
+          attrs: {
+            "data-toggle": "tooltip",
+            "data-placement": "top",
+            title: "Eliminar docente"
+          }
+        },
+        [_c("i", { staticClass: "fas fa-trash-alt" })]
+      )
     ])
   }
 ]

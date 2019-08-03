@@ -24,7 +24,7 @@ class Materia extends Model
      */
     public function Docente(){
 
-        return $this -> belongsToMany(Docente::class,'id_materia');
+        return $this -> belongsToMany(Docente::class,'materia_tiene_docente','id_materia','id_docente')->withTimestamps();
 
     }
 

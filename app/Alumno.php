@@ -26,4 +26,23 @@ class Alumno extends Model
 
     }
 
+    public function Carrera(){
+
+        return $this -> belongsTo(Carrera::class,'id_carrera');
+
+    }
+
+    public function Grupo(){
+
+        return $this -> belongsTo(Grupo::class,'id_grupo');
+
+    }
+
+    public function Cuatrimestre(){
+
+        return $this -> belongsTo(Cuatrimestre::class,'id_cuatrimestre');   
+
+    }
+
+
 }
